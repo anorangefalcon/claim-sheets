@@ -17,14 +17,28 @@ const errorHandler = require("./middleware/errorHandler");
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "*",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
-// Database connection
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// Database connection with traditional server configuration
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
+
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error);
+    process.exit(1);
+  }
+};
+
+// Connect to database on startup
+connectDB();
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -33,7 +47,21 @@ app.use("/api/expenses", expenseRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", message: "Server is running" });
+  res.json({
+    status: "OK",
+    message: "Server is running",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+  });
+});
+
+// Root endpoint
+app.get("/", (req, res) => {
+  res.json({
+    message: "Claim Settlement API Server",
+    version: "1.0.0",
+    status: "running",
+  });
 });
 
 // Error handling middleware
@@ -44,8 +72,4 @@ app.use("*", (req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+module.exports = app;
