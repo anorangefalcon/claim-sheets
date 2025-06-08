@@ -1,8 +1,8 @@
-const express = require("express");
-const { body, validationResult } = require("express-validator");
-const ClaimSheet = require("../models/ClaimSheet");
-const ExpenseItem = require("../models/ExpenseItem");
-const auth = require("../middleware/auth");
+import express from "express";
+import { body, validationResult } from "express-validator";
+import ClaimSheet from "../models/ClaimSheet.js";
+import ExpenseItem from "../models/ExpenseItem.js";
+import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -147,4 +147,4 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;

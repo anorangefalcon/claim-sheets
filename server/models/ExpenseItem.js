@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const expenseItemSchema = new mongoose.Schema(
   {
@@ -61,4 +61,4 @@ expenseItemSchema.post("remove", async function () {
   }
 });
 
-module.exports = mongoose.model("ExpenseItem", expenseItemSchema);
+export default mongoose.model("ExpenseItem", expenseItemSchema);

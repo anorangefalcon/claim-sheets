@@ -1,18 +1,18 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
 
 // Load environment variables
 dotenv.config();
 
 // Import routes
-const authRoutes = require("./routes/auth");
-const claimSheetRoutes = require("./routes/claimSheets");
-const expenseRoutes = require("./routes/expenses");
+import authRoutes from "./routes/auth.js";
+import claimSheetRoutes from "./routes/claimSheets.js";
+import expenseRoutes from "./routes/expenses.js";
 
 // Import middleware
-const errorHandler = require("./middleware/errorHandler");
+import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 
@@ -94,4 +94,4 @@ app.use("*", (req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-module.exports = app;
+export default app;

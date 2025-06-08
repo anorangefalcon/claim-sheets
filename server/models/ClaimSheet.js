@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const claimSheetSchema = new mongoose.Schema(
   {
@@ -49,4 +49,4 @@ claimSheetSchema.methods.updateTotalAmount = async function () {
   return this.save();
 };
 
-module.exports = mongoose.model("ClaimSheet", claimSheetSchema);
+export default mongoose.model("ClaimSheet", claimSheetSchema);

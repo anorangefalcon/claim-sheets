@@ -2,6 +2,7 @@
   "name": "claim-settlement-server",
   "version": "1.0.0",
   "description": "Backend server for claim settlement application",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

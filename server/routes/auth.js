@@ -1,7 +1,7 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const { body, validationResult } = require("express-validator");
-const User = require("../models/User");
+import express from "express";
+import jwt from "jsonwebtoken";
+import { body, validationResult } from "express-validator";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -118,4 +118,4 @@ router.post(
   }
 );
 
-module.exports = router;
+export default router;

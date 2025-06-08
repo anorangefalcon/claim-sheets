@@ -1,5 +1,5 @@
-const app = require("./app");
-const dotenv = require("dotenv");
+import app from "./app.js";
+import dotenv from "dotenv";
 
 // Load environment variables
 dotenv.config();
