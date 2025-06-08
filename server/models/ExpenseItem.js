@@ -58,6 +58,17 @@ expenseItemSchema.post("save", async function () {
   }
 });
 
+// Handle different deletion methods
+expenseItemSchema.post("deleteOne", { document: true }, async function () {
+  if (!ClaimSheet) {
+    ClaimSheet = (await import("./ClaimSheet.js")).default;
+  }
+  const claimSheet = await ClaimSheet.findById(this.claimSheetId);
+  if (claimSheet) {
+    await claimSheet.updateTotalAmount();
+  }
+});
+
 expenseItemSchema.post("remove", async function () {
   if (!ClaimSheet) {
     ClaimSheet = (await import("./ClaimSheet.js")).default;
@@ -65,6 +76,18 @@ expenseItemSchema.post("remove", async function () {
   const claimSheet = await ClaimSheet.findById(this.claimSheetId);
   if (claimSheet) {
     await claimSheet.updateTotalAmount();
+  }
+});
+
+expenseItemSchema.post("findOneAndDelete", async function (doc) {
+  if (doc && !ClaimSheet) {
+    ClaimSheet = (await import("./ClaimSheet.js")).default;
+  }
+  if (doc) {
+    const claimSheet = await ClaimSheet.findById(doc.claimSheetId);
+    if (claimSheet) {
+      await claimSheet.updateTotalAmount();
+    }
   }
 });
 
