@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 
+// Forward declaration to avoid circular dependency
+let ClaimSheet;
+
 const expenseItemSchema = new mongoose.Schema(
   {
     claimSheetId: {
@@ -46,7 +49,9 @@ expenseItemSchema.index({ claimSheetId: 1, serialNo: 1 }, { unique: true });
 
 // Update claim sheet total when expense is saved or removed
 expenseItemSchema.post("save", async function () {
-  const ClaimSheet = require("./ClaimSheet");
+  if (!ClaimSheet) {
+    ClaimSheet = (await import("./ClaimSheet.js")).default;
+  }
   const claimSheet = await ClaimSheet.findById(this.claimSheetId);
   if (claimSheet) {
     await claimSheet.updateTotalAmount();
@@ -54,7 +59,9 @@ expenseItemSchema.post("save", async function () {
 });
 
 expenseItemSchema.post("remove", async function () {
-  const ClaimSheet = require("./ClaimSheet");
+  if (!ClaimSheet) {
+    ClaimSheet = (await import("./ClaimSheet.js")).default;
+  }
   const claimSheet = await ClaimSheet.findById(this.claimSheetId);
   if (claimSheet) {
     await claimSheet.updateTotalAmount();

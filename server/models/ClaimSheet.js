@@ -40,7 +40,7 @@ const claimSheetSchema = new mongoose.Schema(
 
 // Update total amount when expenses are modified
 claimSheetSchema.methods.updateTotalAmount = async function () {
-  const ExpenseItem = require("./ExpenseItem");
+  const { default: ExpenseItem } = await import("./ExpenseItem.js");
   const expenses = await ExpenseItem.find({ claimSheetId: this._id });
   this.totalAmount = expenses.reduce(
     (total, expense) => total + expense.amount,

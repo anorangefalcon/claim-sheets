@@ -36,13 +36,13 @@ const CreateClaimSheetModal = ({ isOpen, onClose }) => {
             htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
-            Claim Sheet Name *
+            Name *
           </label>
           <input
-            {...register("name", { required: "Claim sheet name is required" })}
+            {...register("name", { required: "Name is required" })}
             type="text"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-            placeholder="Enter claim sheet name"
+            placeholder="Enter claimee's name"
           />
           {errors.name && (
             <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
