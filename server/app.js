@@ -25,20 +25,42 @@ app.use(
 );
 app.use(express.json());
 
-// Database connection with traditional server configuration
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+// Database connection configuration
+let isConnected = false;
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+const connectDB = async () => {
+  if (isConnected && mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000,
+    });
+
+    isConnected = true;
+    console.log(`✅ MongoDB Connected`);
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
-    process.exit(1);
+    isConnected = false;
+    throw error;
   }
 };
 
-// Connect to database on startup
-connectDB();
+// Middleware to ensure database connection before each request
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    res.status(500).json({
+      message: "Database connection failed",
+      error: error.message,
+    });
+  }
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
