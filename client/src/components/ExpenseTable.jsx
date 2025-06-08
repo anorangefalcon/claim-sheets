@@ -82,12 +82,12 @@ const ExpenseTable = ({
               Actions
             </th>
           </tr>
-        </thead>
+        </thead>{" "}
         <tbody className="bg-white divide-y divide-gray-200">
-          {expenses.map((expense) => (
+          {expenses.map((expense, index) => (
             <tr key={expense._id} className="hover:bg-gray-50">
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {expense.serialNo}
+                {index + 1}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {expense.billNo}

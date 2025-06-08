@@ -74,10 +74,11 @@ const PrintableClaimSheet = React.forwardRef(
                 </tr>
               </thead>
               <tbody>
+                {" "}
                 {expenses.map((expense, index) => (
                   <tr key={expense._id} className="bg-white">
                     <td className="border border-gray-800 px-3 py-2 text-sm text-gray-900">
-                      {expense.serialNo}
+                      {index + 1}
                     </td>
                     <td className="border border-gray-800 px-3 py-2 text-sm text-gray-900">
                       {expense.billNo}
