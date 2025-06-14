@@ -8,21 +8,26 @@ import {
   FileText,
   Download,
   Printer,
+  Sparkles,
 } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useClaimSheet } from "../hooks/useClaimSheets";
 import { useExpenses, useDeleteExpense } from "../hooks/useExpenses";
+import { useBillUpload } from "../hooks/useBillUpload";
 import LoadingSpinner from "./ui/LoadingSpinner";
+import StarryLoader from "./ui/StarryLoader";
 import ExpenseTable from "./ExpenseTable";
 import AddExpenseModal from "./modals/AddExpenseModal";
 import EditExpenseModal from "./modals/EditExpenseModal";
+import BillUploadModal from "./modals/BillUploadModal";
 import PrintableClaimSheet from "./PrintableClaimSheet";
 
 const ClaimSheetDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isAddExpenseModalOpen, setIsAddExpenseModalOpen] = useState(false);
+  const [isBillUploadModalOpen, setIsBillUploadModalOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const printableRef = useRef();
@@ -38,6 +43,7 @@ const ClaimSheetDetail = () => {
     error: expensesError,
   } = useExpenses(id);
   const deleteExpenseMutation = useDeleteExpense();
+  const billUploadMutation = useBillUpload();
 
   const handleDeleteExpense = async (expenseId) => {
     if (
@@ -257,20 +263,36 @@ const ClaimSheetDetail = () => {
       </div>
       {/* Expenses Section */}
       <div className="bg-white shadow rounded-lg">
+        {" "}
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-medium text-gray-900">Expense Items</h2>
-            <button
-              onClick={() => setIsAddExpenseModalOpen(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Expense
-            </button>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => setIsBillUploadModalOpen(true)}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              >
+                <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />
+                Upload Bills
+              </button>
+              <button
+                onClick={() => setIsAddExpenseModalOpen(true)}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Expense
+              </button>
+            </div>
           </div>
-        </div>
+        </div>{" "}
+        <div className="p-6 relative">
+          {/* AI Processing Overlay */}
+          {billUploadMutation.isPending && (
+            <div className="absolute inset-0 z-10 rounded-lg">
+              <StarryLoader message="Processing your bills with AI..." />
+            </div>
+          )}
 
-        <div className="p-6">
           <ExpenseTable
             expenses={expenses}
             isLoading={isLoadingExpenses}
@@ -286,11 +308,16 @@ const ClaimSheetDetail = () => {
         isOpen={isAddExpenseModalOpen}
         onClose={() => setIsAddExpenseModalOpen(false)}
         claimSheetId={id}
-      />
+      />{" "}
       <EditExpenseModal
         isOpen={!!editingExpense}
         onClose={() => setEditingExpense(null)}
         expense={editingExpense}
+      />
+      <BillUploadModal
+        isOpen={isBillUploadModalOpen}
+        onClose={() => setIsBillUploadModalOpen(false)}
+        claimSheetId={id}
       />
       {/* Hidden Printable Component */}
       <div className="hidden">

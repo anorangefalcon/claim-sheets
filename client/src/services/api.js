@@ -68,4 +68,14 @@ export const expensesAPI = {
   delete: (id) => api.delete(`/expenses/${id}`),
 };
 
+// Bill Upload API
+export const billUploadAPI = {
+  uploadBills: (formData) =>
+    api.post("/bill-upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+};
+
 export default api;

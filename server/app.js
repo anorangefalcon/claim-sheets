@@ -10,6 +10,7 @@ dotenv.config();
 import authRoutes from "./routes/auth.js";
 import claimSheetRoutes from "./routes/claimSheets.js";
 import expenseRoutes from "./routes/expenses.js";
+import billUploadRoutes from "./routes/billUpload.js";
 
 // Import middleware
 import errorHandler from "./middleware/errorHandler.js";
@@ -66,6 +67,7 @@ app.use(async (req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/claim-sheets", claimSheetRoutes);
 app.use("/api/expenses", expenseRoutes);
+app.use("/api/bill-upload", billUploadRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
