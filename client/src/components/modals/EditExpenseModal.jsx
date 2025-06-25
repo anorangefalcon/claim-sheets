@@ -129,7 +129,7 @@ const EditExpenseModal = ({ isOpen, onClose, expense }) => {
             <input
               {...register("amount", {
                 required: "Amount is required",
-                min: { value: 0.01, message: "Amount must be greater than 0" },
+                min: { value: 0 },
                 pattern: {
                   value: /^\d+(\.\d{1,2})?$/,
                   message: "Please enter a valid amount",

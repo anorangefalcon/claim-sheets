@@ -72,7 +72,7 @@ router.post(
     body("amount")
       .isNumeric()
       .withMessage("Amount must be a number")
-      .custom((value) => value > 0)
+      .custom((value) => value >= 0)
       .withMessage("Amount must be positive"),
   ],
   async (req, res, next) => {
@@ -142,7 +142,7 @@ router.put(
       .optional()
       .isNumeric()
       .withMessage("Amount must be a number")
-      .custom((value) => !value || value > 0)
+      .custom((value) => !value || value >= 0)
       .withMessage("Amount must be positive"),
   ],
   async (req, res, next) => {
