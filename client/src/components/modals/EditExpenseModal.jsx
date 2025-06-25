@@ -136,8 +136,8 @@ const EditExpenseModal = ({ isOpen, onClose, expense }) => {
                 },
               })}
               type="number"
-              step="0.01"
-              min="0.01"
+              step="1"
+              min="0"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               placeholder="0.00"
             />
