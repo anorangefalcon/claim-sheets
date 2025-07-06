@@ -182,6 +182,59 @@ router.put(
   }
 );
 
+// @route   PUT /api/expenses/reorder/:claimSheetId
+// @desc    Reorder expenses in a claim sheet
+// @access  Private
+router.put("/reorder/:claimSheetId", async (req, res, next) => {
+  try {
+    const { claimSheetId } = req.params;
+    const { expenses } = req.body;
+
+    // Verify claim sheet belongs to user
+    const claimSheet = await ClaimSheet.findOne({
+      _id: claimSheetId,
+      userId: req.user._id,
+    });
+
+    if (!claimSheet) {
+      return res.status(404).json({ message: "Claim sheet not found" });
+    }
+
+    // Validate expenses array
+    if (!Array.isArray(expenses) || expenses.length === 0) {
+      return res.status(400).json({ message: "Invalid expenses data" });
+    }
+
+    // To avoid unique constraint issues, we'll update serial numbers in a specific way
+    // First, set all serial numbers to negative values to avoid conflicts
+    await ExpenseItem.updateMany(
+      { claimSheetId },
+      { $inc: { serialNo: -1000 } }
+    );
+
+    // Then update each expense with the correct serial number
+    const updatePromises = expenses.map(async (expense, index) => {
+      return ExpenseItem.findOneAndUpdate(
+        { _id: expense._id, claimSheetId },
+        { serialNo: index + 1 },
+        { new: true }
+      );
+    });
+
+    await Promise.all(updatePromises);
+
+    // Get updated expenses sorted by serial number
+    const updatedExpenses = await ExpenseItem.find({ claimSheetId }).sort({
+      serialNo: 1,
+    });
+
+    res.json(updatedExpenses);
+  } catch (error) {
+    console.error("Reorder error:", error);
+    next(error);
+  }
+});
+
 // @route   DELETE /api/expenses/:id
 // @desc    Delete an expense item
 // @access  Private

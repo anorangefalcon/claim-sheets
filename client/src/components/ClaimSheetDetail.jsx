@@ -1,19 +1,11 @@
 import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  Plus,
-  Edit3,
-  Trash2,
-  FileText,
-  Download,
-  Printer,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, Plus, FileText, Printer, Sparkles } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useClaimSheet } from "../hooks/useClaimSheets";
 import { useExpenses, useDeleteExpense } from "../hooks/useExpenses";
+import { useExpenseReorder } from "../hooks/useExpenseReorder";
 import { useBillUpload } from "../hooks/useBillUpload";
 import LoadingSpinner from "./ui/LoadingSpinner";
 import StarryLoader from "./ui/StarryLoader";
@@ -43,6 +35,7 @@ const ClaimSheetDetail = () => {
     error: expensesError,
   } = useExpenses(id);
   const deleteExpenseMutation = useDeleteExpense();
+  const reorderExpensesMutation = useExpenseReorder();
   const billUploadMutation = useBillUpload();
 
   const handleDeleteExpense = async (expenseId) => {
@@ -56,6 +49,13 @@ const ClaimSheetDetail = () => {
   };
   const handleEditExpense = (expense) => {
     setEditingExpense(expense);
+  };
+
+  const handleUpdateExpenseOrder = async (updatedExpenses) => {
+    await reorderExpensesMutation.mutateAsync({
+      claimSheetId: id,
+      expenses: updatedExpenses,
+    });
   };
 
   const handlePrint = () => {
@@ -291,8 +291,7 @@ const ClaimSheetDetail = () => {
             <div className="absolute inset-0 z-10 rounded-lg">
               <StarryLoader message="Processing your bills with AI..." />
             </div>
-          )}
-
+          )}{" "}
           <ExpenseTable
             expenses={expenses}
             isLoading={isLoadingExpenses}
@@ -300,6 +299,7 @@ const ClaimSheetDetail = () => {
             onEdit={handleEditExpense}
             onDelete={handleDeleteExpense}
             isDeleting={deleteExpenseMutation.isPending}
+            onUpdateOrder={handleUpdateExpenseOrder}
           />
         </div>
       </div>{" "}

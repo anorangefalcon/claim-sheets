@@ -66,6 +66,8 @@ export const expensesAPI = {
   create: (data) => api.post("/expenses", data),
   update: (id, data) => api.put(`/expenses/${id}`, data),
   delete: (id) => api.delete(`/expenses/${id}`),
+  reorder: (claimSheetId, expenses) =>
+    api.put(`/expenses/reorder/${claimSheetId}`, { expenses }),
 };
 
 // Bill Upload API
