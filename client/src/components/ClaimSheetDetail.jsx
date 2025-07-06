@@ -260,14 +260,34 @@ const ClaimSheetDetail = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>{" "}
       {/* Expenses Section */}
       <div className="bg-white shadow rounded-lg">
         {" "}
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
+          <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
             <h2 className="text-lg font-medium text-gray-900">Expense Items</h2>
-            <div className="flex items-center space-x-3">
+
+            {/* Mobile Layout - Stack buttons vertically */}
+            <div className="flex flex-col space-y-2 sm:hidden">
+              <button
+                onClick={() => setIsBillUploadModalOpen(true)}
+                className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              >
+                <Sparkles className="w-4 h-4 mr-2 text-yellow-500" />
+                Upload Bills
+              </button>
+              <button
+                onClick={() => setIsAddExpenseModalOpen(true)}
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Expense
+              </button>
+            </div>
+
+            {/* Desktop Layout - Original horizontal layout */}
+            <div className="hidden sm:flex sm:items-center sm:space-x-3">
               <button
                 onClick={() => setIsBillUploadModalOpen(true)}
                 className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
@@ -285,7 +305,7 @@ const ClaimSheetDetail = () => {
             </div>
           </div>
         </div>{" "}
-        <div className="p-6 relative">
+        <div className="p-4 sm:p-6 relative">
           {/* AI Processing Overlay */}
           {billUploadMutation.isPending && (
             <div className="absolute inset-0 z-10 rounded-lg">
